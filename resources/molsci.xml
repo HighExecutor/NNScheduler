@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Molecular Sciences workflow (Figure 10 in Ramakrishnan and Gannon) -->
+<adag name="molsci" jobCount="5" fileCount="0" childCount="3" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="babel" namespace="molsci" name="BABEL" runtime="60" cores="1">
+		<uses file="babel_in.dat" link="input" size="102400"/>
+		<uses file="babel_out.dat" link="output" size="122880"/>
+	</job>
+	<job id="lightprep" namespace="molsci" name="LightPrep" runtime="60" cores="1">
+		<uses file="babel_out.dat" link="input" size="122880"/>
+		<uses file="lightprep_out.dat" link="output" size="143360"/>
+	</job>
+	<job id="gamess" namespace="molsci" name="GAMESS" runtime="300" cores="1">
+		<uses file="lightprep_out.dat" link="input" size="143360"/>
+		<uses file="gamess_out.dat" link="output" size="179200"/>
+	</job>
+	<job id="apbs" namespace="molsci" name="APBS" runtime="600" cores="1">
+		<uses file="pqr_out.dat" link="input" size="2306867"/>
+		<uses file="gamess_out.dat" link="input" size="179200"/>
+		<uses file="apbs_out.dat" link="output" size="52428800"/>
+	</job>
+	<job id="pdb2pqr" namespace="molsci" name="PDB2PQR" runtime="300" cores="1">
+		<uses file="pdb_in.dat" link="input" size="2097152"/>
+		<uses file="pqr_out.dat" link="output" size="2306867"/>
+	</job>
+	<child ref="lightprep">
+		<parent ref="babel"/>
+	</child>
+	<child ref="gamess">
+		<parent ref="lightprep"/>
+	</child>
+	<child ref="apbs">
+		<parent ref="pdb2pqr"/>
+		<parent ref="gamess"/>
+	</child>
+</adag>

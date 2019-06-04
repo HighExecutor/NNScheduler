@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Pan-STARRS database loading workflow (Figure 13 in Ramakrishnan and Gannon) -->
+<adag name="psload" jobCount="4" fileCount="0" childCount="3" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="preprocess1" namespace="psload" name="PreprocessCSV" runtime="5" cores="1">
+		<uses file="preprocess1_in.dat" link="input" size="97517568"/>
+		<uses file="load1.1_in.dat" link="output" size="97517568"/>
+	</job>
+	<job id="validate1" namespace="psload" name="ValidateLoadDB" runtime="5" cores="1">
+		<uses file="load1.1_out.dat" link="input" size="97517568"/>
+		<uses file="validate1_out.dat" link="output" size="104857600"/>
+	</job>
+	<job id="end" namespace="psload" name="End" runtime="10" cores="1">
+		<uses file="validate1_out.dat" link="input" size="104857600"/>
+	</job>
+	<job id="load1.1" namespace="psload" name="LoadCSV" runtime="30" cores="1">
+		<uses file="load1.1_in.dat" link="input" size="97517568"/>
+		<uses file="load1.1_out.dat" link="output" size="97517568"/>
+	</job>
+	<child ref="validate1">
+		<parent ref="load1.1"/>
+	</child>
+	<child ref="end">
+		<parent ref="validate1"/>
+	</child>
+	<child ref="load1.1">
+		<parent ref="preprocess1"/>
+	</child>
+</adag>

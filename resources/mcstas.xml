@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- McStas neutron ray tracing workflow (Figure 15 in Ramakrishnan and Gannon) -->
+<adag name="mcstas" jobCount="3" fileCount="0" childCount="2" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="vasp" namespace="mcstas" name="VASP" runtime="4320000" cores="16">
+		<uses file="vasp_out.dat" link="output" size="587202"/>
+	</job>
+	<job id="nmoldyn" namespace="mcstas" name="nMoldyn" runtime="129600" cores="1">
+		<uses file="vasp_out.dat" link="input" size="587202"/>
+		<uses file="nmoldyn_out.dat" link="output" size="587202"/>
+	</job>
+	<job id="mcsts" namespace="mcstas" name="McSts" runtime="10800" cores="128">
+		<uses file="nmoldyn_out.dat" link="input" size="587202"/>
+	</job>
+	<child ref="nmoldyn">
+		<parent ref="vasp"/>
+	</child>
+	<child ref="mcsts">
+		<parent ref="nmoldyn"/>
+	</child>
+</adag>

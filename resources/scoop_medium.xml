@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Southeastern Coastal Ocean Observing and Prediction Program (SCOOP) workflow (Figure 4 in Ramakrishnan and Gannon) -->
+<adag name="scoop" jobCount="51" fileCount="0" childCount="1" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="adcirc41" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in41.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out41.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc42" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in42.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out42.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc19" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in19.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out19.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc13" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in13.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out13.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc22" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in22.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out22.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc46" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in46.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out46.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc43" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in43.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out43.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc24" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in24.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out24.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc11" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in11.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out11.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc29" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in29.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out29.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc14" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in14.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out14.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc37" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in37.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out37.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc28" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in28.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out28.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc30" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in30.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out30.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc4" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in4.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out4.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc34" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in34.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out34.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc35" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in35.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out35.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc8" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in8.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out8.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc6" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in6.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out6.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc17" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in17.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out17.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc36" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in36.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out36.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc44" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in44.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out44.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc9" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in9.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out9.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc39" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in39.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out39.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc1" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in1.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out1.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc48" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in48.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out48.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc27" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in27.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out27.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc47" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in47.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out47.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc15" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in15.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out15.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc18" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in18.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out18.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc26" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in26.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out26.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc12" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in12.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out12.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc23" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in23.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out23.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc25" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in25.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out25.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc33" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in33.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out33.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc5" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in5.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out5.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc7" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in7.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out7.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc45" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in45.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out45.dat" link="output" size="169869312"/>
+	</job>
+	<job id="pp" namespace="scoop" name="PostProcessing" runtime="1" cores="1">
+		<uses file="adcirc_out20.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out28.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out34.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out15.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out23.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out11.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out42.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out3.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out22.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out37.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out43.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out29.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out35.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out1.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out45.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out21.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out36.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out4.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out44.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out7.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out33.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out31.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out19.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out9.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out12.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out10.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out25.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out47.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out49.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out24.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out27.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out38.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out16.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out13.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out46.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out18.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out39.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out5.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out2.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out14.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out6.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out30.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out8.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out50.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out40.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out41.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out32.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out48.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out26.dat" link="input" size="169869312"/>
+		<uses file="adcirc_out17.dat" link="input" size="169869312"/>
+	</job>
+	<job id="adcirc20" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in20.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out20.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc32" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in32.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out32.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc49" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in49.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out49.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc3" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in3.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out3.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc38" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in38.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out38.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc2" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in2.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out2.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc40" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in40.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out40.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc10" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in10.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out10.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc50" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in50.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out50.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc31" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in31.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out31.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc16" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in16.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out16.dat" link="output" size="169869312"/>
+	</job>
+	<job id="adcirc21" namespace="scoop" name="Adcirc" runtime="900" cores="16">
+		<uses file="adcirc_in21.dat" link="input" size="288358400"/>
+		<uses file="adcirc_out21.dat" link="output" size="169869312"/>
+	</job>
+	<child ref="pp">
+		<parent ref="adcirc42"/>
+		<parent ref="adcirc19"/>
+		<parent ref="adcirc33"/>
+		<parent ref="adcirc5"/>
+		<parent ref="adcirc43"/>
+		<parent ref="adcirc11"/>
+		<parent ref="adcirc24"/>
+		<parent ref="adcirc37"/>
+		<parent ref="adcirc30"/>
+		<parent ref="adcirc34"/>
+		<parent ref="adcirc28"/>
+		<parent ref="adcirc6"/>
+		<parent ref="adcirc23"/>
+		<parent ref="adcirc35"/>
+		<parent ref="adcirc17"/>
+		<parent ref="adcirc45"/>
+		<parent ref="adcirc8"/>
+		<parent ref="adcirc36"/>
+		<parent ref="adcirc44"/>
+		<parent ref="adcirc9"/>
+		<parent ref="adcirc39"/>
+		<parent ref="adcirc1"/>
+		<parent ref="adcirc48"/>
+		<parent ref="adcirc27"/>
+		<parent ref="adcirc47"/>
+		<parent ref="adcirc15"/>
+		<parent ref="adcirc32"/>
+		<parent ref="adcirc18"/>
+		<parent ref="adcirc26"/>
+		<parent ref="adcirc12"/>
+		<parent ref="adcirc4"/>
+		<parent ref="adcirc14"/>
+		<parent ref="adcirc25"/>
+		<parent ref="adcirc13"/>
+		<parent ref="adcirc22"/>
+		<parent ref="adcirc7"/>
+		<parent ref="adcirc41"/>
+		<parent ref="adcirc20"/>
+		<parent ref="adcirc46"/>
+		<parent ref="adcirc49"/>
+		<parent ref="adcirc3"/>
+		<parent ref="adcirc38"/>
+		<parent ref="adcirc2"/>
+		<parent ref="adcirc40"/>
+		<parent ref="adcirc29"/>
+		<parent ref="adcirc10"/>
+		<parent ref="adcirc50"/>
+		<parent ref="adcirc31"/>
+		<parent ref="adcirc16"/>
+		<parent ref="adcirc21"/>
+	</child>
+</adag>

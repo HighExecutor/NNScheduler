@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MotifNetwork bioinformatics workflow (Figure 8 in Ramakrishnan and Gannon) -->
+<adag name="motif" jobCount="13" fileCount="0" childCount="12" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="pre" namespace="motif" name="Pre Interproscan" runtime="30" cores="1">
+		<uses file="wf_in.dat" link="input" size="13631488"/>
+		<uses file="scan_in3.dat" link="output" size="102400"/>
+		<uses file="scan_in2.dat" link="output" size="102400"/>
+		<uses file="scan_in8.dat" link="output" size="102400"/>
+		<uses file="scan_in6.dat" link="output" size="102400"/>
+		<uses file="scan_in7.dat" link="output" size="102400"/>
+		<uses file="scan_in1.dat" link="output" size="102400"/>
+		<uses file="scan_in4.dat" link="output" size="102400"/>
+		<uses file="scan_in9.dat" link="output" size="102400"/>
+		<uses file="scan_in10.dat" link="output" size="102400"/>
+		<uses file="scan_in5.dat" link="output" size="102400"/>
+	</job>
+	<job id="scan7" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in7.dat" link="input" size="102400"/>
+		<uses file="scan_out7.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan4" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in4.dat" link="input" size="102400"/>
+		<uses file="scan_out4.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan10" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in10.dat" link="input" size="102400"/>
+		<uses file="scan_out10.dat" link="output" size="512000"/>
+	</job>
+	<job id="post" namespace="motif" name="Post Interproscan" runtime="60" cores="1">
+		<uses file="scan_out4.dat" link="input" size="512000"/>
+		<uses file="scan_out1.dat" link="input" size="512000"/>
+		<uses file="scan_out6.dat" link="input" size="512000"/>
+		<uses file="scan_out10.dat" link="input" size="512000"/>
+		<uses file="scan_out3.dat" link="input" size="512000"/>
+		<uses file="scan_out9.dat" link="input" size="512000"/>
+		<uses file="scan_out8.dat" link="input" size="512000"/>
+		<uses file="scan_out7.dat" link="input" size="512000"/>
+		<uses file="scan_out2.dat" link="input" size="512000"/>
+		<uses file="scan_out5.dat" link="input" size="512000"/>
+		<uses file="post_out2.dat" link="output" size="628097024"/>
+		<uses file="post_out1.dat" link="output" size="74448896"/>
+		<uses file="post_out3.dat" link="output" size="628097024"/>
+	</job>
+	<job id="scan5" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in5.dat" link="input" size="102400"/>
+		<uses file="scan_out5.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan9" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in9.dat" link="input" size="102400"/>
+		<uses file="scan_out9.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan8" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in8.dat" link="input" size="102400"/>
+		<uses file="scan_out8.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan2" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in2.dat" link="input" size="102400"/>
+		<uses file="scan_out2.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan3" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in3.dat" link="input" size="102400"/>
+		<uses file="scan_out3.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan6" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in6.dat" link="input" size="102400"/>
+		<uses file="scan_out6.dat" link="output" size="512000"/>
+	</job>
+	<job id="scan1" namespace="motif" name="Interproscan" runtime="5400" cores="1">
+		<uses file="scan_in1.dat" link="input" size="102400"/>
+		<uses file="scan_out1.dat" link="output" size="512000"/>
+	</job>
+	<job id="motif" namespace="motif" name="Motif" runtime="3600" cores="256">
+		<uses file="post_out1.dat" link="input" size="74448896"/>
+		<uses file="motif_out.dat" link="output" size="1501560832"/>
+	</job>
+	<child ref="scan7">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan4">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan10">
+		<parent ref="pre"/>
+	</child>
+	<child ref="post">
+		<parent ref="scan5"/>
+		<parent ref="scan4"/>
+		<parent ref="scan10"/>
+		<parent ref="scan7"/>
+		<parent ref="scan1"/>
+		<parent ref="scan8"/>
+		<parent ref="scan6"/>
+		<parent ref="scan3"/>
+		<parent ref="scan2"/>
+		<parent ref="scan9"/>
+	</child>
+	<child ref="scan5">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan9">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan8">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan2">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan3">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan6">
+		<parent ref="pre"/>
+	</child>
+	<child ref="scan1">
+		<parent ref="pre"/>
+	</child>
+	<child ref="motif">
+		<parent ref="post"/>
+	</child>
+</adag>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Gene2Life bioinformatics workflow (Figure 7 in Ramakrishnan and Gannon) -->
+<adag name="gene2life" jobCount="8" fileCount="0" childCount="6" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="blast1" namespace="gene2life" name="blast" runtime="180" cores="1">
+		<uses file="wf_in.dat" link="input" size="104857"/>
+		<uses file="blast1_out2.dat" link="output" size="104857"/>
+		<uses file="blast1_out1.dat" link="output" size="1048576"/>
+	</job>
+	<job id="drawgram1" namespace="gene2life" name="drawgram" runtime="30" cores="1">
+		<uses file="dnapars_out.dat" link="input" size="4096"/>
+		<uses file="drawgram1_out.dat" link="output" size="35840"/>
+	</job>
+	<job id="clustalw2" namespace="gene2life" name="clustalw" runtime="300" cores="1">
+		<uses file="blast2_out2.dat" link="input" size="104857"/>
+		<uses file="clustalw2_out1.dat" link="output" size="104857"/>
+		<uses file="clustalw2_out2.dat" link="output" size="4096"/>
+	</job>
+	<job id="blast2" namespace="gene2life" name="blast" runtime="180" cores="1">
+		<uses file="wf_in.dat" link="input" size="104857"/>
+		<uses file="blast2_out2.dat" link="output" size="104857"/>
+		<uses file="blast2_out1.dat" link="output" size="1048576"/>
+	</job>
+	<job id="drawgram2" namespace="gene2life" name="drawgram" runtime="30" cores="1">
+		<uses file="protpars_out.dat" link="input" size="4096"/>
+		<uses file="drawgram2_out.dat" link="output" size="35840"/>
+	</job>
+	<job id="dnapars" namespace="gene2life" name="dnapars" runtime="30" cores="1">
+		<uses file="clustalw1_out2.dat" link="input" size="4096"/>
+		<uses file="dnapars_out.dat" link="output" size="4096"/>
+	</job>
+	<job id="protpars" namespace="gene2life" name="protpars" runtime="30" cores="1">
+		<uses file="clustalw2_out2.dat" link="input" size="4096"/>
+		<uses file="protpars_out.dat" link="output" size="4096"/>
+	</job>
+	<job id="clustalw1" namespace="gene2life" name="clustalw" runtime="300" cores="1">
+		<uses file="blast1_out2.dat" link="input" size="104857"/>
+		<uses file="clustalw1_out2.dat" link="output" size="4096"/>
+		<uses file="clustalw1_out1.dat" link="output" size="104857"/>
+	</job>
+	<child ref="drawgram1">
+		<parent ref="dnapars"/>
+	</child>
+	<child ref="clustalw2">
+		<parent ref="blast2"/>
+	</child>
+	<child ref="drawgram2">
+		<parent ref="protpars"/>
+	</child>
+	<child ref="dnapars">
+		<parent ref="clustalw1"/>
+	</child>
+	<child ref="protpars">
+		<parent ref="clustalw2"/>
+	</child>
+	<child ref="clustalw1">
+		<parent ref="blast1"/>
+	</child>
+</adag>

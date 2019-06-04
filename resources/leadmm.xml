@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- LEAD Mesoscale Meterology workflow (Figure 1 in Ramakrishnan and Gannon) -->
+<adag name="leadmm" jobCount="6" fileCount="0" childCount="4" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="tpp" namespace="leadmm" name="TerrainPreProcessor" runtime="4" cores="1">
+		<uses file="tpp.txt" link="output" size="209715"/>
+	</job>
+	<job id="arps2wrf" namespace="leadmm" name="ARPS2WRF" runtime="78" cores="1">
+		<uses file="wrfstatic.txt" link="input" size="19922944"/>
+		<uses file="lbi.txt" link="input" size="511705088"/>
+		<uses file="tdi.txt" link="input" size="254803968"/>
+		<uses file="wrf.dat" link="output" size="216006656"/>
+	</job>
+	<job id="wrfstatic" namespace="leadmm" name="WrfStatic" runtime="338" cores="1">
+		<uses file="wrfstatic.txt" link="output" size="19922944"/>
+	</job>
+	<job id="wrf" namespace="leadmm" name="WRF" runtime="4570" cores="16">
+		<uses file="wrf.dat" link="input" size="216006656"/>
+		<uses file="wrf.dat.out" link="output" size="2539651072"/>
+	</job>
+	<job id="lbi" namespace="leadmm" name="LateralBoundaryInterpolator" runtime="146" cores="1">
+		<uses file="input.txt" link="input" size="154140672"/>
+		<uses file="tpp.txt" link="input" size="209715"/>
+		<uses file="lbi.txt" link="output" size="511705088"/>
+	</job>
+	<job id="tdi" namespace="leadmm" name="3DInterpolator" runtime="88" cores="1">
+		<uses file="input.txt" link="input" size="154140672"/>
+		<uses file="tpp.txt" link="input" size="209715"/>
+		<uses file="tdi.txt" link="output" size="254803968"/>
+	</job>
+	<child ref="arps2wrf">
+		<parent ref="wrfstatic"/>
+		<parent ref="lbi"/>
+		<parent ref="tdi"/>
+	</child>
+	<child ref="wrf">
+		<parent ref="arps2wrf"/>
+	</child>
+	<child ref="lbi">
+		<parent ref="tpp"/>
+	</child>
+	<child ref="tdi">
+		<parent ref="tpp"/>
+	</child>
+</adag>

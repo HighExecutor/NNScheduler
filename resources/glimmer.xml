@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Glimmer bioinformatics workflow (Figure 6 in Ramakrishnan and Gannon) -->
+<adag name="glimmer" jobCount="4" fileCount="0" childCount="3" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="glimmer2" namespace="glimmer" name="glimmer2" runtime="90" cores="1">
+		<uses file="icm_out.dat" link="input" size="1415577"/>
+		<uses file="glimmer_out.dat" link="output" size="10380902"/>
+	</job>
+	<job id="long_orfs" namespace="glimmer" name="Long_orfs" runtime="2" cores="1">
+		<uses file="orf_in.dat" link="input" size="9227468"/>
+		<uses file="orf_out.dat" link="output" size="27648"/>
+	</job>
+	<job id="extract" namespace="glimmer" name="extract" runtime="1" cores="1">
+		<uses file="orf_out.dat" link="input" size="27648"/>
+		<uses file="extract_out.dat" link="output" size="1677721"/>
+	</job>
+	<job id="build_icm" namespace="glimmer" name="build_icm" runtime="5" cores="1">
+		<uses file="extract_out.dat" link="input" size="1677721"/>
+		<uses file="icm_out.dat" link="output" size="1415577"/>
+	</job>
+	<child ref="glimmer2">
+		<parent ref="build_icm"/>
+	</child>
+	<child ref="extract">
+		<parent ref="long_orfs"/>
+	</child>
+	<child ref="build_icm">
+		<parent ref="extract"/>
+	</child>
+</adag>

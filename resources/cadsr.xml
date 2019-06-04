@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Cancer Data Standards Repository workflow (Figure 12 in Ramakrishnan and Gannon) -->
+<adag name="cadsr" jobCount="4" fileCount="0" childCount="3" xmlns="http://pegasus.isi.edu/schema/DAX">
+	<job id="findClassesInProjects" namespace="cadsr" name="findClassesInProjects" runtime="5" cores="1">
+		<uses file="projects_out.dat" link="input" size="10485760"/>
+		<uses file="classes_out.dat" link="output" size="15728640"/>
+	</job>
+	<job id="findSemanticMetadata" namespace="cadsr" name="findSemanticMetadata" runtime="5" cores="1">
+		<uses file="projects_out.dat" link="input" size="10485760"/>
+		<uses file="classes_out.dat" link="input" size="15728640"/>
+		<uses file="metadata_out.dat" link="output" size="10485760"/>
+	</job>
+	<job id="searchLogicConcept" namespace="cadsr" name="searchLogicConcept" runtime="5" cores="1">
+		<uses file="metadata_out.dat" link="input" size="10485760"/>
+		<uses file="search_out.dat" link="output" size="15728640"/>
+	</job>
+	<job id="findProjects" namespace="cadsr" name="findProjects" runtime="5" cores="1">
+		<uses file="projects_in.dat" link="input" size="10485760"/>
+		<uses file="projects_out.dat" link="output" size="10485760"/>
+	</job>
+	<child ref="findClassesInProjects">
+		<parent ref="findProjects"/>
+	</child>
+	<child ref="findSemanticMetadata">
+		<parent ref="findClassesInProjects"/>
+		<parent ref="findProjects"/>
+	</child>
+	<child ref="searchLogicConcept">
+		<parent ref="findSemanticMetadata"/>
+	</child>
+</adag>
