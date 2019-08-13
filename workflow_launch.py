@@ -38,8 +38,6 @@ from multiprocessing import Pool
 from draw_figures import draw_schedule, draw_graph, write_schedule
 
 
-
-
 import os
 import glob
 
@@ -47,9 +45,9 @@ files = glob.glob("C:\\wspace\\papers\\ysc2019\\nns\\exps\\last_exp\\*")
 for f in files:
     os.remove(f)
 # инициализируем Tensorflow
-config = tf.ConfigProto()
-config.gpu_options.allow_growth = True
-sess = tf.Session(config=config)
+# config = tf.ConfigProto()
+# config.gpu_options.allow_growth = False
+sess = tf.Session()
 # инициализируем Keras
 from keras import backend as K
 
@@ -71,21 +69,23 @@ state_size = 64
 # число действий
 action_size = agent_tasks * nodes
 # инициализируем агента
-agent = actor.DQNAgent(state_size, action_size)
+process_id = random.randint(0, 1000)
+print("process {}".format(process_id))
+agent = actor.DQNAgent(state_size, action_size, name="actor_{}".format(process_id))
 # функция загрузки весов (сохраняются agent.save(name))
 # agent.load("model61.h5")
 done = False
 # размер выборки из памяти для обучения
-batch_size = 128
+batch_size = 16
 # метрики
 scoreavg = 0
-EPISODES = 10001
+EPISODES = 50001
 loss = 0
 # nodes = np.array([4, 8, 8, 16])
 nodes = np.array([4, 8, 8, 16])
 # nodes = np.array([4, 4, 8, 8, 16, 16])
-wfs_names = ["gene2life", "floodplain", "scoop_small", "leadadas", "leadmm", "molsci"]
-# wfs_names = ["Montage_25"]
+# wfs_names = ["gene2life", "floodplain", "scoop_small", "leadadas", "leadmm", "molsci"]
+wfs_names = ["Montage_25"]
 # wfs_names = ["Montage_25", "CyberShake_30", "Inspiral_30", "Epigenomics_24"]
 # wfs_names = ["Montage_25", "CyberShake_30"]
 wfs_real = [read_wf(name) for name in wfs_names]
@@ -126,6 +126,8 @@ def episode(ei):
     # ep_memory = []
     # import pprint
     # pprint.pprint(wfl.get_state_map())
+    # state_memory = np.zeros(shape=(3, 64))
+    # state_memory[0] = state
     sars_list = list()
     for act_time in range(100):
         if act_time > 100:
@@ -164,14 +166,14 @@ def episode(ei):
             #             scoreavg / neps, last_mean_scores))
             # break
 
-#from functools import partial
+from functools import partial
 
 if __name__ == '__main__':
     parallel = 1
-    pool = Pool(parallel)
+    # pool = Pool(parallel)
     start = timer.time()
     for e in range(0, EPISODES, parallel):
-        #rewards = list(pool.map(episode, range(e, e + parallel, 1)))
+        # rewards = list(pool.map(episode, range(e, e + parallel, 1)))
         rewards = episode(e)
         rewards = [rewards]
 
@@ -187,7 +189,7 @@ if __name__ == '__main__':
             learning61.append(mean_scores)
             last_mean_scores = np.mean(scores[len(scores) - last_mean_size:len(scores)])
             scores_learn.append(last_mean_scores)
-            if (e + ei) % 100 == 0:
+            if (e + ei) % 10 == 0:
                 print(
                     "episode: {}/{},  score: {}, normalized score avg: {:.4}, last scores {}".format(
                         e,
@@ -196,10 +198,10 @@ if __name__ == '__main__':
                         mean_scores, last_mean_scores))
 
         # обучаем нейронку
-        if e % 10 == 0:
+        if e % 1 == 0:
             if len(agent.D) > batch_size:
                 loss += agent.replay(batch_size, e)
-        if e % (50000) == 0:
+        if e % (5000) == 0:
             # test wfs
             eps = agent.epsilon
             agent.epsilon = 0.0

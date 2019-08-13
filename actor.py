@@ -11,7 +11,6 @@ from collections import deque
 import numpy as np
 import json
 from keras import initializers
-# from keras.initializations import normal, identity
 from keras.models import model_from_json
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
@@ -21,21 +20,22 @@ from keras.optimizers import SGD, Adam
 
 
 class DQNAgent:
-    def __init__(self, state_size, action_size):
+    def __init__(self, state_size, action_size, name="actor"):
+        print("")
         self.STATE = state_size
         self.ACTIONS = action_size  # number of  actions
-        self.FINAL_GAMMA = 0.5  # decay rate of past observations
+        self.FINAL_GAMMA = 0.9  # decay rate of past observations
         self.INITIAL_GAMMA = 0.9  # decay rate of past observations
         self.GAMMA = self.INITIAL_GAMMA  # decay rate of past observations
-        self.OBSERVATION = 1000.  # timesteps to observe before training
+        self.OBSERVATION = 50.  # timesteps to observe before training
         # self.EXPLORE = 80000.  # frames over which to anneal epsilon
-        self.EXPLORE = 500000.  # frames over which to anneal epsilon
-        self.GAMMA_EXPLORE = 500000.  # frames over which to anneal epsilon
+        self.EXPLORE = 50000.  # frames over which to anneal epsilon
+        self.GAMMA_EXPLORE = 50000.  # frames over which to anneal epsilon
         # как правило мы используем e-greedy policy и хотим, чтобы в начале действия были
         # более рандомны, чем в начале, поэтому мы снижаем e от INITIAL до FINAL за EXPLORE шагов
         self.FINAL_EPSILON = 0.01  # final value of epsilon
         self.INITIAL_EPSILON = 0.4  # starting value of epsilon
-        self.REPLAY_MEMORY = 1000  # number of previous transitions to remember
+        self.REPLAY_MEMORY = 30  # number of previous transitions to remember
         self.LEARNING_RATE = 1e-4
         self.D = deque(maxlen=self.REPLAY_MEMORY)
         self.model = self.buildmodel()
@@ -105,7 +105,7 @@ class DQNAgent:
                     # c помощью дейтсивя a, поэтому мы меняем Q по алгоритму SARSA для действий из
                     # памяти
                     # targets[i, action_t] = reward_t + self.GAMMA * np.max(Q_sa)
-                    targets[i, action_t] = (1-self.GAMMA) * targets[i, action_t] + self.GAMMA*reward_t + 0.7*np.max(Q_sa)
+                    targets[i, action_t] = (1-self.GAMMA) * targets[i, action_t] + self.GAMMA*reward_t + 0.1*np.max(Q_sa)
 
             # обучаем сеть
             model_loss = self.model.train_on_batch(inputs, targets)

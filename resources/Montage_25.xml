@@ -7,7 +7,7 @@
   <job id="ID00000" namespace="Montage" name="mProjectPP" version="1.0" runtime="13.39">
     <uses file="region.hdr" link="input" register="true" transfer="true" optional="false" type="data" size="304"/>
     <uses file="2mass-atlas-ID00000s-jID00000.fits" link="input" register="true" transfer="true" optional="false" type="data" size="4222080"/>
-    <uses file="p2mass-atlas-ID00000s-jID00000.fits" link="output" register="true" transfer="true" optional="false" type="data" size="4167312"/>
+    <uses file="p2mass-atlas-ID00000s-jID00000.fits" link="output" size="4167312"/>
     <uses file="p2mass-atlas-ID00000s-jID00000_area.fits" link="output" register="true" transfer="true" optional="false" type="data" size="4167312"/>
   </job>
   <job id="ID00001" namespace="Montage" name="mProjectPP" version="1.0" runtime="13.83">
