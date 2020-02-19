@@ -8,5 +8,5 @@ target
 *.orig
 __pycache__
 .ipynb_checkpoints
-train_logs
-results
+/train_logs/
+/results/

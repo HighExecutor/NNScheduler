@@ -31,6 +31,7 @@ parser.add_argument('--result-folder', type=str, default='')
 
 
 def main(args):
+    URL = f"http://{args.host}:{args.port}/"
     if args.logger:
         logger = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now()}')
     else:
@@ -39,9 +40,9 @@ def main(args):
         rewards = [run_episode(ei, logger, args) for ei in range(args.num_episodes)]
         plot_reward(args, rewards)
     else:
-        test(args)
+        test(args, URL)
     if args.save:
-        save()
+        save(URL)
 
 
 if __name__ == '__main__':

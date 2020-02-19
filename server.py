@@ -158,8 +158,9 @@ def heft():
     estimator = ModelTimeEstimator(bandwidth=10)
     _wf = wf(wf_name)
     heft_schedule = run_heft(_wf, rm, estimator)
-    print(heft_schedule)
-    actions = [(proc.start_time, int(proc.job.global_id), node.name_id) for node in heft_schedule.mapping for proc in heft_schedule.mapping[node]]
+    actions = [(proc.start_time, int(proc.job.global_id), node.name_id)
+               for node in heft_schedule.mapping
+               for proc in heft_schedule.mapping[node]]
     print(actions)
     actions = sorted(actions, key=lambda x: x[0])
     actions = [(action[1], action[2]) for action in actions]

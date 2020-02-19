@@ -104,8 +104,7 @@ def run_episode(ei, logger, args):
     return reward
 
 
-def test(args):
-    URL = f"http://{args.host}:{args.port}/"
+def test(args, URL):
     config = parameter_setup(args, DEFAULT_CONFIG)
     test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
     for i in range(test_size):
@@ -137,7 +136,7 @@ def test(args):
         write_schedule(args.run_name, i, wfl)
 
 
-def save():
+def save(URL):
     model = requests.post(f'{URL}save')
 
 
