@@ -3,13 +3,18 @@ from env.context import Context
 from utilities.DAXParser import read_workflow
 
 import numpy as np
+import os
+import pathlib
+
 
 def runtime_gen(size):
     return np.random.exponential(scale=400, size=size)
 
+
 def input_gen(size):
     return np.random.weibull(a=1, size=size)*100 #used earlier
     # return np.random.weibull(a=1, size=size)*10
+
 
 def tree_data_gen(tree_length):
     tree = np.zeros((tree_length, tree_length), dtype=np.int)
@@ -46,15 +51,21 @@ def tree_data_wf(wf):
     data = data - np.transpose(data)
     return tree, data, run_times
 
+
 def read_wf(wf_name):
     # wf_name = "CyberShake_30"
-    wf_path = ".\\resources\\{0}.xml".format(wf_name)
+    project_path = pathlib.Path(os.getcwd())
+    resources_path = os.path.join(project_path, 'resources')
+    wf_path = os.path.join(resources_path,"{0}.xml".format(wf_name))
     return read_workflow(wf_path, wf_name)
+
 
 if __name__ == "__main__":
     wf_name = "Montage_25"
     # wf_name = "CyberShake_30"
-    wf_path = ".\\resources\\{0}.xml".format(wf_name)
+    project_path = pathlib.Path(os.getcwd())
+    resources_path = os.path.join(project_path, 'resources')
+    wf_path = os.path.join(resources_path, "{0}.xml".format(wf_name))
     wfl = read_workflow(wf_path, wf_name)
 
     nodes = np.array([4, 8, 16])  # железно
@@ -68,5 +79,3 @@ if __name__ == "__main__":
         print(wf.wf_end_time())
     import pprint
     pprint.pprint(wf.get_state_map())
-
-    pass
