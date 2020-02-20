@@ -10,6 +10,7 @@ from heft_deps.heft_settings import run_heft
 from heft_deps.heft_utility import Utility
 import numpy as np
 import tensorflow as tf
+import env.context as ctx
 from episode_utils import wf_setup
 import os
 import pathlib
@@ -164,10 +165,18 @@ def heft():
                for proc in heft_schedule.mapping[node]]
     actions = sorted(actions, key=lambda x: x[0])
     actions = [(action[1], action[2]) for action in actions]
-    makespan = Utility.makespan(heft_schedule)
-    # reward = worst_time / makespan
-    draw_heft_schedule(heft_schedule.mapping, data['worst_time'], len(actions), 'h', '1')
-    response = {'makespan': makespan, 'actions': actions}
+
+    test_wfs, test_times, test_scores, test_size = wf_setup(data['wf_name'])
+    ttree, tdata, trun_times = test_wfs[0]
+    wfl = ctx.Context(len(_wf.get_all_unique_tasks()), data['nodes'], trun_times, ttree, tdata)
+    reward = 0
+    end_time = 0
+    for task, node in actions:
+        task_id = wfl.candidates.tolist().index(task)
+        reward, end_time = wfl.make_action(task_id, node)
+
+    draw_heft_schedule(heft_schedule.mapping, wfl.worst_time, len(actions), 'h', '1')
+    response = {'reward': reward, 'end-time': end_time}
     return response
 
 
