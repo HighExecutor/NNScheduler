@@ -65,6 +65,7 @@ def episode(ei, config, test_wfs, test_size, URL):
         if act_time > 100:
             raise Exception("attempt to provide action after wf is scheduled")
         mask = list(map(int, list(wfl.get_mask())))
+        state = state.tolist() if type(state) != list else state
         action = requests.post(f"{URL}act", json={'state': state, 'mask': mask, 'sched': False}).json()['action']
         act_t, act_n = wfl.actions[action]
         reward, wf_time = wfl.make_action(act_t, act_n)
@@ -72,6 +73,7 @@ def episode(ei, config, test_wfs, test_size, URL):
         if config['actor_type'] == 'lstm':
             deq.push(next_state)
             next_state = deq.show()
+            next_state = next_state.tolist()
         done = wfl.completed
         sars_list.append((state, action, reward, next_state, done))
         state = next_state
@@ -165,3 +167,9 @@ def plot_reward(args, rewards):
     result = pd.DataFrame()
     result['reward'] = means
     result.to_csv(mean_reward_path, sep=',', index=None, columns=['reward'])
+
+
+def do_heft(args, URL):
+    config = parameter_setup(args, DEFAULT_CONFIG)
+    response = requests.post(f'{URL}heft', json={'wf_name': config['wfs_name'], 'nodes': config['nodes'].tolist()}).json()
+    return response

@@ -4,7 +4,7 @@ import pathlib
 import os
 from datetime import datetime
 from logger import Logger
-from episode_utils import plot_reward, run_episode, test, save
+from episode_utils import plot_reward, run_episode, test, save, do_heft
 
 parser = ArgumentParser()
 
@@ -32,17 +32,20 @@ parser.add_argument('--result-folder', type=str, default='')
 
 def main(args):
     URL = f"http://{args.host}:{args.port}/"
-    if args.logger:
-        logger = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now()}')
-    else:
-        logger = None
-    if not args.is_test:
-        rewards = [run_episode(ei, logger, args) for ei in range(args.num_episodes)]
-        plot_reward(args, rewards)
-    else:
-        test(args, URL)
-    if args.save:
-        save(URL)
+    if args.alg == 'nns':
+        if args.logger:
+            logger = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now()}')
+        else:
+            logger = None
+        if not args.is_test:
+            rewards = [run_episode(ei, logger, args) for ei in range(args.num_episodes)]
+            plot_reward(args, rewards)
+        else:
+            test(args, URL)
+        if args.save:
+            save(URL)
+    elif args.alg == 'heft':
+        do_heft(args, URL)
 
 
 if __name__ == '__main__':

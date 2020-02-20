@@ -10,6 +10,7 @@ from heft_deps.heft_settings import run_heft
 from heft_deps.heft_utility import Utility
 import numpy as np
 import tensorflow as tf
+from episode_utils import wf_setup
 import os
 import pathlib
 import datetime
@@ -156,15 +157,13 @@ def heft():
     wf_name = data['wf_name']
     rm = ExperimentResourceManager(rg.r(data['nodes']))
     estimator = ModelTimeEstimator(bandwidth=10)
-    _wf = wf(wf_name)
+    _wf = wf(wf_name[0])
     heft_schedule = run_heft(_wf, rm, estimator)
     actions = [(proc.start_time, int(proc.job.global_id), node.name_id)
                for node in heft_schedule.mapping
                for proc in heft_schedule.mapping[node]]
-    print(actions)
     actions = sorted(actions, key=lambda x: x[0])
     actions = [(action[1], action[2]) for action in actions]
-    print(actions)
     makespan = Utility.makespan(heft_schedule)
     # reward = worst_time / makespan
     draw_heft_schedule(heft_schedule.mapping, data['worst_time'], len(actions), 'h', '1')
