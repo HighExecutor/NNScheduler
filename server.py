@@ -176,7 +176,7 @@ def heft():
         reward, end_time = wfl.make_action(task_id, node)
 
     draw_heft_schedule(heft_schedule.mapping, wfl.worst_time, len(actions), 'h', '1')
-    response = {'reward': reward, 'end-time': end_time}
+    response = {'reward': reward, 'makespan': end_time}
     return response
 
 

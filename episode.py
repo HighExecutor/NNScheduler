@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 import pathlib
 import os
 from datetime import datetime
-from logger import Logger
+from logger import setup_logger
 from episode_utils import plot_reward, run_episode, test, save, do_heft
 
 parser = ArgumentParser()
@@ -32,20 +32,21 @@ parser.add_argument('--result-folder', type=str, default='')
 
 def main(args):
     URL = f"http://{args.host}:{args.port}/"
+    logger_nns, logger_heft = setup_logger(args)
     if args.alg == 'nns':
-        if args.logger:
-            logger = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now()}')
-        else:
-            logger = None
         if not args.is_test:
-            rewards = [run_episode(ei, logger, args) for ei in range(args.num_episodes)]
+            rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
             plot_reward(args, rewards)
         else:
             test(args, URL)
         if args.save:
             save(URL)
     elif args.alg == 'heft':
-        do_heft(args, URL)
+        do_heft(args, URL, logger_heft)
+    elif args.alg == 'compare':
+        response = do_heft(args, URL, logger_heft)
+        rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
+        plot_reward(args, rewards, heft_reward=response['reward'])
 
 
 if __name__ == '__main__':
