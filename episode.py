@@ -47,6 +47,7 @@ def main(args):
         response = do_heft(args, URL, logger_heft)
         rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
         plot_reward(args, rewards, heft_reward=response['reward'])
+        test(args, URL)
 
 
 if __name__ == '__main__':

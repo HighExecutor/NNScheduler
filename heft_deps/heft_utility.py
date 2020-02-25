@@ -42,13 +42,13 @@ def draw_heft_schedule(schedule, worst_time, n, run_name, test_i):
     for k in range(m):
         items = schedule[keys[k]]
         for it in items:
-            print("Task {}, st {} end {}".format(it.job, it.start_time, it.end_time))
+            print("Task {}, st {} end {}".format(str(int(it.job.global_id)), it.start_time, it.end_time))
             coords = (it.start_time, k)
             rect = patches.Rectangle(coords, it.end_time - it.start_time, 1, fill=True, facecolor=colors[used_colors],
-                                     label=it.job, alpha=0.5, edgecolor="black")
+                                     label=str(int(it.job.global_id)), alpha=0.5, edgecolor="black")
             used_colors += 1
             ax.add_patch(rect)
-            ax.text(coords[0] + (it.end_time - it.start_time) / 3, coords[1] + 0.5, str(it.job))
+            ax.text(coords[0] + (it.end_time - it.start_time) / 3, coords[1] + 0.5, str(int(it.job.global_id)))
 
     plt.legend()
     plt.ylim(0, m)
