@@ -1,10 +1,11 @@
 import numpy as np
 from argparse import ArgumentParser
-import pathlib
-import os
-from datetime import datetime
 from logger import setup_logger
-from episode_utils import plot_reward, run_episode, test, save, do_heft
+from ep_utils.draw_rewards import plot_reward
+from ep_utils.do_episode import run_episode
+from ep_utils.test import test
+from ep_utils.save import save
+from ep_utils.heft import do_heft
 
 parser = ArgumentParser()
 

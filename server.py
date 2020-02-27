@@ -11,7 +11,7 @@ from heft_deps.heft_utility import Utility
 import numpy as np
 import tensorflow as tf
 import env.context as ctx
-from episode_utils import wf_setup
+from ep_utils.setups import wf_setup
 import os
 import pathlib
 import datetime
