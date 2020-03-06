@@ -89,6 +89,32 @@ class Context:
             reward = 0.3 * (self.worst_time / placed_item.end_time) * len(self.scheduled) / self.n
         return reward, end_time
 
+    def make_action_item(self, task_act, node):
+        candidates_len = len(self.candidates)
+        if task_act >= candidates_len:
+            raise Exception("chosen action is not valid")
+        task = self.candidates[task_act]
+        placed_item = self.find_time_slot(task, node)
+
+        # look for the worst time slot
+        # time_slots = []
+        # for n in range(self.m):
+        #     time_slots.append(self.find_time_slot(task, n).end_time)
+        # worst_time_slot = max(time_slots)
+
+        self.scheduled.append(task)
+        self.endtime_map[task, node] = placed_item.end_time
+        self.schedule[node].append(placed_item)
+        self.update_state()
+        end_time = max(self.endtime_map.max(), 0.00001)
+
+        reward = 0.0
+        if self.completed:
+            reward = self.worst_time / end_time
+        else:
+            reward = 0.3 * (self.worst_time / placed_item.end_time) * len(self.scheduled) / self.n
+        return reward, end_time, placed_item
+
     def is_ready_task(self, task):
         for p in self.parents(task):
             if p not in self.scheduled:

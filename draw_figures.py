@@ -4,6 +4,7 @@ import matplotlib.patches as patches
 import seaborn as sns
 import networkx as nkx
 
+
 def draw_schedule_file(input_path, worst, name):
     schedule = dict()
     file = open(input_path, 'r')
@@ -47,6 +48,7 @@ def draw_schedule_file(input_path, worst, name):
 
     plt.tight_layout()
     plt.show()
+
 
 def scores_draw_file(path):
     data = np.load(path)

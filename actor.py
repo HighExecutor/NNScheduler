@@ -104,6 +104,25 @@ class DQNActor:
             action_index = np.argmax(q)
         return action_index
 
+    def act_q(self, state, mask, sched=False):
+        if max(mask) == 0:
+            raise Exception("no valid actions")
+        # choose an action epsilon greedy
+        if random.random() <= self.epsilon and not sched:
+            q = np.random.random(self.ACTIONS)
+            if mask is not 'none':
+                q *= mask
+        else:
+            q = self.model.predict(state)
+            if mask is not 'none':
+                q *= mask
+            if q.max() == 0:
+                print("random action: max(Q)==0")
+                q = np.random.random(self.ACTIONS)
+                if mask is not 'none':
+                    q *= mask
+        return q
+
     def replay(self, batch_size):
         model_loss = 0
         if self.replay_counter > self.OBSERVATION:
