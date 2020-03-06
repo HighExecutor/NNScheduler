@@ -36,7 +36,7 @@ class ScheduleInterectivePlotter(object):
     def put_item(self):
 
         colors = sns.color_palette("Set2", self.n)
-        fig, ax = plt.subplots(ncols=2, nrows=1)
+        fig, ax = plt.subplots(ncols=2, nrows=1, figsize=(10, 10))
         m = len(self.schedule.keys())
         keys = list(self.schedule.keys())
         used_colors = 0
@@ -60,8 +60,8 @@ class ScheduleInterectivePlotter(object):
             texts.append(f'Item {item.task} on proc {proc} with reward {round(reward, 3)}.')
 
         for idx, text in enumerate(texts):
-            ax[1].text(0.8, 0.9 - idx / 20, text,
-                       verticalalignment='bottom', horizontalalignment='right',
+            ax[1].text(0.8, 0.95 - idx / 20, text,
+                       verticalalignment='center', horizontalalignment='right',
                        transform=ax[1].transAxes, fontsize=10, wrap=True)
 
         plt.show()
