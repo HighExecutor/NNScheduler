@@ -49,6 +49,8 @@ def main(args):
         rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
         plot_reward(args, rewards, heft_reward=response['reward'])
         test(args, URL)
+    elif args.alg == 'compare_dqts_heft':
+        response = do_heft(args, URL, logger_heft)
 
 
 if __name__ == '__main__':

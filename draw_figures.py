@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import seaborn as sns
 import networkx as nkx
+import os
 
 
 def draw_schedule_file(input_path, worst, name):
@@ -49,7 +50,6 @@ def draw_schedule_file(input_path, worst, name):
     plt.tight_layout()
     plt.show()
 
-
 def scores_draw_file(path):
     data = np.load(path)
     s = len(data)
@@ -81,7 +81,7 @@ def scores_draw_file(path):
     pass
 
 
-def draw_schedule(test_i, episode, wfl):
+def draw_schedule(run_name, test_i, wfl):
     schedule = wfl.schedule
     worst = wfl.worst_time
     n = wfl.n
@@ -104,10 +104,10 @@ def draw_schedule(test_i, episode, wfl):
     plt.legend()
     plt.ylim(0, m)
     plt.xlim(0, worst)
-    plt.title("test {} {}".format(test_i, episode))
+    plt.title("{}_{}".format(run_name, test_i))
     # plt.show()
-    path = "C:\\wspace\\papers\\ysc2019\\nns\exps\\last_exp\\"
-    plt.savefig(path + "testwf_{}_episode_{}.png".format(test_i, episode))
+    path = os.path.join(os.getcwd(), 'results')
+    plt.savefig(os.path.join(path, "schedule_{}_{}.png".format(run_name, test_i)))
     plt.close()
 
 
@@ -123,23 +123,24 @@ def draw_graph(components, idx, wf_name=""):
 
     nkx.draw_networkx(g, with_labels=True, arrows=True)
     plt.title("WF {} {}".format(idx, wf_name))
-    plt.savefig("C:\\wspace\\papers\\ysc2019\\nns\\exps\\last_exp\\testwf_{}_graph.png".format(idx))
+    path = os.path.join(os.getcwd(), 'results')
+    plt.savefig(os.path.join(path,"testwf_{}_graph.png".format(idx)))
     plt.close()
 
 
-def write_schedule(test_i, episode, wfl):
-    path = "C:\\wspace\\papers\\ysc2019\\nns\\exps\\last_exp\\"
-    file = open(path + "testwf_{}_episode_{}".format(test_i, episode), 'w')
+def write_schedule(run_name, test_i, wfl):
+    path = os.path.join(os.getcwd(), 'results')
+    file = open(os.path.join(path, "schedule_{}_{}".format(run_name, test_i)), 'w')
     for r in list(wfl.schedule.keys()):
         file.write("res_{}\n".format(r))
         sched = wfl.schedule[r]
         for item in sched:
             file.write("{}_{}_{}\n".format(item.task, item.st_time, item.end_time))
     file.close()
-    draw_schedule(test_i, episode, wfl)
+    draw_schedule(run_name, test_i, wfl)
+
 
 if __name__ == '__main__':
-    path = "C:\wspace\papers\ysc2019\\nns\exps\chosen\\small\\testwf_0_episode_90000"
     worst = 1400.0
     name = "Gene2life"
     draw_schedule_file(path, worst, name)

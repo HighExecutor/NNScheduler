@@ -8,6 +8,7 @@ from ep_utils.setups import wf_setup
 from draw_figures import write_schedule
 from interective import ScheduleInterectivePlotter
 from copy import deepcopy
+from ep_utils.draw_rewards import plot_reward
 
 parser = ArgumentParser()
 
@@ -198,7 +199,8 @@ def interective_test(model, args):
 def main(args):
     model = get_model(args)
     reward = [run_episode(model, ei, args) for ei in range(args.num_episodes)]
-    interective_test(model, args)
+    plot_reward(args, reward)
+    # interective_test(model, args)
 
 
 if __name__ == '__main__':

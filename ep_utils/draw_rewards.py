@@ -46,3 +46,27 @@ def plot_reward(args, rewards, heft_reward=None):
         result = pd.DataFrame()
         result['reward'] = rewards
         result.to_csv(reward_path, sep=',', index=None, columns=['reward'])
+
+
+def plot_reward_together(args, reward0, reward1):
+    cur_dir = os.getcwd()
+    means0 = np.convolve(reward0, np.ones((500,)))[499:-499] / 500
+    means0 = means0.tolist()
+
+    means1 = np.convolve(reward1, np.ones((500,)))[499:-499] / 500
+    means1 = means1.tolist()
+
+    plt.style.use("seaborn-muted")
+    plt.figure(figsize=(10, 5))
+    plt.plot(reward0, '--', label="rewards our")
+    plt.plot(means0, '-', label="avg our")
+
+    plt.plot(reward1, '-.', label="rewards dqts")
+    plt.plot(means1, '-o', label="avg dqts")
+
+    plt.ylabel('reward')
+    plt.xlabel('episodes')
+    plt.legend()
+    plt_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now()}_plt.png'
+    plt.savefig(plt_path)
+

@@ -338,7 +338,7 @@ class Context:
                 else:
                     state.append(0.0)
                     state.append(0.0)
-        return np.array(state,dtype=np.float32)
+        return np.array(state, dtype=np.float32)
 
     def get_state_map(self):
         result = dict()
