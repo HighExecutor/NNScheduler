@@ -25,23 +25,23 @@ def plot_reward(args, rewards, heft_reward=None):
     plt.ylabel('reward')
     plt.xlabel('episodes')
     plt.legend()
-    plt_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now()}_plt.png'
+    plt_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_plt.png'
     plt.savefig(plt_path)
 
-    reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now()}_rewards.csv'
+    reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_rewards.csv'
     rewards = np.array(rewards)
     result = pd.DataFrame()
     result['reward'] = rewards
     result.to_csv(reward_path, sep=',', index=None, columns=['reward'])
 
-    mean_reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now()}_mean_rewards.csv'
+    mean_reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_mean_rewards.csv'
     means = np.array(means)
     result = pd.DataFrame()
     result['reward'] = means
     result.to_csv(mean_reward_path, sep=',', index=None, columns=['reward'])
 
     if heft_reward is not None:
-        reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now()}_heft_reward.csv'
+        reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_heft_reward.csv'
         rewards = np.array(rewards)
         result = pd.DataFrame()
         result['reward'] = rewards
@@ -67,6 +67,6 @@ def plot_reward_together(args, reward0, reward1):
     plt.ylabel('reward')
     plt.xlabel('episodes')
     plt.legend()
-    plt_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now()}_plt.png'
+    plt_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_plt.png'
     plt.savefig(plt_path)
 
