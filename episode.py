@@ -32,6 +32,16 @@ parser.add_argument('--result-folder', type=str, default='')
 
 
 def main(args):
+    """
+    Console running program.
+    Using parameter args.alg you can run 3 different strategy.
+    1. Run algorithm on NN if args.alg = nns
+    2. Run heft algorithm if args.heft = heft
+    3. Run first heft algorithm, then algorithm based on NN if args.alg = compare
+
+    :param args:
+    :return:
+    """
     URL = f"http://{args.host}:{args.port}/"
     logger_nns, logger_heft = setup_logger(args)
     if args.alg == 'nns':
@@ -49,8 +59,6 @@ def main(args):
         rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
         plot_reward(args, rewards, heft_reward=response['reward'])
         test(args, URL)
-    elif args.alg == 'compare_dqts_heft':
-        response = do_heft(args, URL, logger_heft)
 
 
 if __name__ == '__main__':

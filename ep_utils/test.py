@@ -6,6 +6,13 @@ from draw_figures import write_schedule
 
 
 def test(args, URL):
+    """
+    Creates schedule using algorithm based on NN
+
+    :param args:
+    :param URL:
+    :return:
+    """
     config = parameter_setup(args, DEFAULT_CONFIG)
     test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
     for i in range(test_size):

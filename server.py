@@ -60,6 +60,11 @@ app.config['model_name'] = args.model_name
 
 @app.route('/')
 def get_model():
+    """
+    Server function which create NN model on Server
+
+    :return:
+    """
     state_size = app.config.get('state_size')
     action_size = app.config.get('action_size')
     actor_type = app.config.get('actor_type')
@@ -86,6 +91,11 @@ def get_model():
 
 @app.route('/act', methods=['POST'])
 def act():
+    """
+    Do specific action
+
+    :return:
+    """
     global graph
     data = request.get_json(force=True)
     if args.actor_type == 'fc':
@@ -103,6 +113,11 @@ def act():
 
 @app.route('/test', methods=['POST'])
 def test():
+    """
+    Create Schedule using current NN without learning
+
+    :return:
+    """
     global graph
     data = request.get_json(force=True)
     if args.actor_type == 'fc':
@@ -121,6 +136,11 @@ def test():
 
 @app.route('/replay', methods=['POST'])
 def replay():
+    """
+    Replay function
+
+    :return:
+    """
     global graph
     data = request.get_json()
     batch_size = data['batch_size']
@@ -131,6 +151,11 @@ def replay():
 
 @app.route('/remember', methods=['POST'])
 def remember():
+    """
+    Remember tuple of data - state, action, reward, next_state
+
+    :return:
+    """
     data = request.get_json()
     SARSA = data['SARSA']
     if args.actor_type == 'fc':
@@ -148,12 +173,22 @@ def remember():
 
 @app.route('/save', methods=['POST'])
 def save():
+    """
+    Saves model
+
+    :return:
+    """
     json_model = model.save('model')
     return json_model
 
 
 @app.route('/heft', methods=['POST'])
 def heft():
+    """
+    Heft algorithm
+
+    :return:
+    """
     data = request.get_json()
     wf_name = data['wf_name']
     rm = ExperimentResourceManager(rg.r(data['nodes']))
