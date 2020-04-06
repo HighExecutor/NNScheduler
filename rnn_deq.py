@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class LSTMDeque(object):
+class RNNDeque(object):
     def __init__(self, seq_size, size):
         self.seq_size = seq_size
         self.size = size

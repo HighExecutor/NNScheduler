@@ -19,13 +19,9 @@ import datetime
 parser = ArgumentParser()
 
 parser.add_argument('--alg', type=str, default='nns')
-
-
 # HEFT parameters
 
-
 # NNs paramters
-
 parser.add_argument('--state-size', type=int, default=64)
 parser.add_argument('--agent-tasks', type=int, default=5)
 parser.add_argument('--actor-type', type=str, default='fc')
@@ -77,7 +73,7 @@ def get_model():
     model_name = app.config.get('model_name')
 
     if not model_name:
-        model_name = 'model_fc.h5' if not actor_type=='fc' else 'model_lstm.h5'
+        model_name = 'model_fc.h5' if not actor_type=='fc' else 'model_rnn.h5'
     if not load:
         return DQNActor(first=first_layer, second=second_layer, third=third_layer, state_size=state_size, action_size=action_size, seq_size=seq_size, actor_type=actor_type)
     else:
@@ -102,7 +98,7 @@ def act():
         state = np.array(data['state']).reshape(1, model.STATE)
         mask = np.array(data['mask'])
         sched = data['sched']
-    elif args.actor_type == 'lstm':
+    elif args.actor_type == 'rnn':
         state = np.asarray(data['state']).reshape((1, model.seq_size, model.STATE))
         mask = np.array(data['mask'])
         sched = data['sched']
@@ -122,7 +118,7 @@ def test():
     data = request.get_json(force=True)
     if args.actor_type == 'fc':
         state = np.asarray(data['state']).reshape(1, model.STATE)
-    elif args.actor_type == 'lstm':
+    elif args.actor_type == 'rnn':
         state = np.asarray(data['state']).reshape((1, model.seq_size, model.STATE))
     mask = np.array(data['mask'])
     sched = data['sched']
@@ -161,7 +157,7 @@ def remember():
     if args.actor_type == 'fc':
         state = np.asarray(SARSA[0]).reshape(1, model.STATE)
         next_state = np.asarray(SARSA[3]).reshape(1, model.STATE)
-    elif args.actor_type == 'lstm':
+    elif args.actor_type == 'rnn':
         state = np.asarray(SARSA[0]).reshape((1, model.seq_size, model.STATE))
         next_state = np.asarray(SARSA[3]).reshape((1, model.seq_size, model.STATE))
     action = int(SARSA[1])

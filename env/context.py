@@ -70,12 +70,6 @@ class Context:
         task = self.candidates[task_act]
         placed_item = self.find_time_slot(task, node)
 
-        # look for the worst time slot
-        # time_slots = []
-        # for n in range(self.m):
-        #     time_slots.append(self.find_time_slot(task, n).end_time)
-        # worst_time_slot = max(time_slots)
-
         self.scheduled.append(task)
         self.endtime_map[task, node] = placed_item.end_time
         self.schedule[node].append(placed_item)
@@ -95,12 +89,6 @@ class Context:
             raise Exception("chosen action is not valid")
         task = self.candidates[task_act]
         placed_item = self.find_time_slot(task, node)
-
-        # look for the worst time slot
-        # time_slots = []
-        # for n in range(self.m):
-        #     time_slots.append(self.find_time_slot(task, n).end_time)
-        # worst_time_slot = max(time_slots)
 
         self.scheduled.append(task)
         self.endtime_map[task, node] = placed_item.end_time
@@ -291,8 +279,8 @@ class Context:
         # state.append(self.t_children_avg)
         # nodes state
         for node in range(self.m):
-        #     state.append(self.nodes[node])
-        #     state.append(self.load[node])
+            #     state.append(self.nodes[node])
+            #     state.append(self.load[node])
             state.append(self.load[node] / self.worst_time)
         # tasks state
         for rt in range(self.state_n):
@@ -344,73 +332,73 @@ class Context:
         result = dict()
         idx = 0
         result['tasks'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['scheduled_tasks'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['nodes'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['height'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['max_width'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['avg_width'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['width_eq_one'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['worst_time'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['runtime_sum'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['runtime_median'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['input_sum'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['input_avg'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['max_parents'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['avg_parents'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['max_parents'] = self.state[idx]
-        idx+=1
+        idx += 1
         result['avg_children'] = self.state[idx]
-        idx+=1
+        idx += 1
         for node in range(self.m):
             result['n_{0}_cores'.format(node)] = self.state[idx]
-            idx+=1
+            idx += 1
             result['n_{0}_load'.format(node)] = self.state[idx]
-            idx+=1
+            idx += 1
         for t in range(self.state_n):
-            #state.append(self.tasks_ready[t])
+            # state.append(self.tasks_ready[t])
             result['t_{0}_valid'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(self.scheduled_tasks[t])
+            idx += 1
+            # state.append(self.scheduled_tasks[t])
             result['t_{0}_scheduled'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(self.run_times[t] / self.runtime_sum)
+            idx += 1
+            # state.append(self.run_times[t] / self.runtime_sum)
             result['t_{0}_runtime'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(self.t_input[t] / self.input_sum)
+            idx += 1
+            # state.append(self.t_input[t] / self.input_sum)
             result['t_{0}_input'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(lvl)
+            idx += 1
+            # state.append(lvl)
             result['t_{0}_level'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(self.tasks_on_lvl[lvl])
+            idx += 1
+            # state.append(self.tasks_on_lvl[lvl])
             result['t_{0}_tasks_on_lvl'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(self.run_times[t] / self.lvl_runtime[lvl])
+            idx += 1
+            # state.append(self.run_times[t] / self.lvl_runtime[lvl])
             result['t_{0}_runtime_to_lvl'.format(t)] = self.state[idx]
-            idx+=1
+            idx += 1
             #    state.append(self.t_input[t] / self.lvl_input[lvl])
             result['t_{0}_input_to_lvl'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(len(self.t_parents[t]))
+            idx += 1
+            # state.append(len(self.t_parents[t]))
             result['t_{0}_parents'.format(t)] = self.state[idx]
-            idx+=1
-            #state.append(len(self.t_children[t]))
+            idx += 1
+            # state.append(len(self.t_children[t]))
             result['t_{0}_children'.format(t)] = self.state[idx]
-            idx+=1
+            idx += 1
             for node in range(self.m):
                 result['t_{0}_n_{1}_comp_time'.format(t, node)] = self.state[idx]
                 idx += 1
@@ -419,7 +407,7 @@ class Context:
 
         return result
 
-    #маска валидных задач
+    # маска валидных задач
     def get_mask(self):
         mask = np.zeros(self.state_n * self.m, dtype=np.int)
         for t in range(self.state_n):

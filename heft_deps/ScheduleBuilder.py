@@ -2,6 +2,7 @@ from heft_deps.heft_helper import HeftHelper
 from heft_deps.resource_manager import Node
 from heft_deps.resource_manager import Schedule, ScheduleItem
 
+
 class ScheduleBuilder:
 
     def __init__(self,
@@ -32,31 +33,35 @@ class ScheduleBuilder:
         def is_last_version_of_task_executing(item):
             return item.state == ScheduleItem.EXECUTING or item.state == ScheduleItem.FINISHED or item.state == ScheduleItem.UNSTARTED
 
-        schedule_mapping = {node: [item for item in items] for (node, items) in self.fixed_schedule_part.mapping.items()}
+        schedule_mapping = {node: [item for item in items] for (node, items) in
+                            self.fixed_schedule_part.mapping.items()}
 
-        finished_tasks = [item.job.id for (node, items) in self.fixed_schedule_part.mapping.items() for item in items if is_last_version_of_task_executing(item)]
+        finished_tasks = [item.job.id for (node, items) in self.fixed_schedule_part.mapping.items() for item in items if
+                          is_last_version_of_task_executing(item)]
         finished_tasks = set([self.workflow.head_task.id] + finished_tasks)
 
         unfinished = [task for task in self.workflow.get_all_unique_tasks() if not task.id in finished_tasks]
 
         ready_tasks = [task.id for task in self._get_ready_tasks(unfinished, finished_tasks)]
 
-
-
-        chrmo_mapping = {item.job.id: self.node_map[node.name] for (node, items) in self.fixed_schedule_part.mapping.items() for item in items if is_last_version_of_task_executing(item)}
+        chrmo_mapping = {item.job.id: self.node_map[node.name] for (node, items) in
+                         self.fixed_schedule_part.mapping.items() for item in items if
+                         is_last_version_of_task_executing(item)}
 
         for (node_name, tasks) in chromo.items():
             for tsk_id in tasks:
                 chrmo_mapping[tsk_id] = self.node_map[node_name]
 
-        task_to_node = {item.job.id: (node, item.start_time, item.end_time) for (node, items) in self.fixed_schedule_part.mapping.items() for item in items if is_last_version_of_task_executing(item)}
+        task_to_node = {item.job.id: (node, item.start_time, item.end_time) for (node, items) in
+                        self.fixed_schedule_part.mapping.items() for item in items if
+                        is_last_version_of_task_executing(item)}
 
         return (schedule_mapping, finished_tasks, ready_tasks, chrmo_mapping, task_to_node)
 
-
     def __call__(self, chromo, current_time):
 
-        (schedule_mapping, finished_tasks, ready_tasks, chrmo_mapping, task_to_node) = self._create_helping_structures(chromo)
+        (schedule_mapping, finished_tasks, ready_tasks, chrmo_mapping, task_to_node) = self._create_helping_structures(
+            chromo)
 
         chromo_copy = dict()
         for (nd_name, items) in chromo.items():
@@ -84,20 +89,19 @@ class ScheduleBuilder:
                         tsk_id = chromo_copy[node.name][i]
                         break
 
-
                 if tsk_id is not None:
                     task = self.task_map[tsk_id]
-                    #del chromo_copy[node.name][0]
+                    # del chromo_copy[node.name][0]
                     chromo_copy[node.name].remove(tsk_id)
                     ready_tasks.remove(tsk_id)
 
                     time_slots, runtime = self._get_possible_execution_times(
-                                                    schedule_mapping,
-                                                    task_to_node,
-                                                    chrmo_mapping,
-                                                    task,
-                                                    node,
-                                                    current_time)
+                        schedule_mapping,
+                        task_to_node,
+                        chrmo_mapping,
+                        task,
+                        node,
+                        current_time)
 
                     time_slot = next(time_slots)
                     start_time = time_slot[0]
@@ -111,11 +115,10 @@ class ScheduleBuilder:
 
                     finished_tasks.add(task.id)
 
-                    #ready_children = [child for child in task.children if self._is_child_ready(finished_tasks, child)]
+                    # ready_children = [child for child in task.children if self._is_child_ready(finished_tasks, child)]
                     ready_children = self._get_ready_tasks(task.children, finished_tasks)
                     for child in ready_children:
                         ready_tasks.append(child.id)
-
 
         schedule = Schedule(schedule_mapping)
         return schedule
@@ -131,29 +134,9 @@ class ScheduleBuilder:
                 if p.id not in finished_tasks:
                     return False
             return True
+
         ready_children = [child for child in children if _is_child_ready(child)]
         return ready_children
-
-    ## TODO: remove this obsolete code later
-    # def _find_slots(self,
-    #                 schedule_mapping,
-    #                 node,
-    #                 comm_ready,
-    #                 runtime,
-    #                 current_time):
-    #     node_schedule = schedule_mapping.get(node, list())
-    #     free_time = 0 if len(node_schedule) == 0 else node_schedule[-1].end_time
-    #     ## TODO: refactor it later
-    #     f_time = max(free_time, comm_ready)
-    #     f_time = max(f_time, current_time)
-    #     base_variant = [(f_time, f_time + runtime)]
-    #     zero_interval = [] if len(node_schedule) == 0 else [(0, node_schedule[0].start_time)]
-    #     middle_intervals = [(node_schedule[i].end_time, node_schedule[i + 1].start_time) for i in range(len(node_schedule) - 1)]
-    #     intervals = zero_interval + middle_intervals + base_variant
-    #
-    #     ## TODO: rethink rounding
-    #     result = [(st, end) for (st, end) in intervals if (current_time < st or abs((current_time - st)) < 0.01) and st >= comm_ready and (runtime < (end - st) or abs((end - st) - runtime) < 0.01)]
-    #     return result
 
     def _find_slots(self,
                     schedule_mapping,
@@ -164,8 +147,6 @@ class ScheduleBuilder:
 
         node_schedule = schedule_mapping.get(node, list())
         return FreeSlotIterator(current_time, comm_ready, runtime, node_schedule)
-
-
 
     def _comm_ready_func(self,
                          task_to_node,
@@ -209,7 +190,9 @@ class ScheduleBuilder:
                                       runtime,
                                       current_time)
         return time_slots, runtime
+
     pass
+
 
 class FreeSlotIterator:
 
@@ -250,6 +233,5 @@ class FreeSlotIterator:
         raise StopIteration()
 
     def _check(self, st, end):
-        #return (self.current_time < st or abs((self.current_time - st)) < 0.01) and st >= self.comm_ready and (self.runtime < (end - st) or abs((end - st) - self.runtime) < 0.01)
+        # return (self.current_time < st or abs((self.current_time - st)) < 0.01) and st >= self.comm_ready and (self.runtime < (end - st) or abs((end - st) - self.runtime) < 0.01)
         return (0.00001 < (st - self.current_time)) and st >= self.comm_ready and (0.00001 < (end - st) - self.runtime)
-
