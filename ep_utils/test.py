@@ -12,21 +12,25 @@ def test(args, URL):
         tree, data, run_times = test_wfs[i]
         wfl = ctx.Context(config['agent_task'], config['nodes'], run_times, tree, data)
         wfl.name = config['wfs_name'][i]
-        if config['actor_type'] == 'lstm':
+        if config['actor_type'] == 'rnn':
             deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
         done = wfl.completed
         state = list(map(float, list(wfl.state)))
-        if config['actor_type'] == 'lstm':
+        if config['actor_type'] == 'rnn':
             deq.push(state)
             state = deq.show()
         for time in range(wfl.n):
             mask = list(map(int, list(wfl.get_mask())))
-            action = requests.post(f'{URL}test', json={'state': state, 'mask': mask, 'sched': False}).json()[
-                'action']
+            if config['actor_type'] == 'rnn':
+                action = requests.post(f'{URL}test', json={'state': state.tolist(), 'mask': mask, 'sched': False}).json()[
+                    'action']
+            else:
+                action = requests.post(f'{URL}test', json={'state': state, 'mask': mask, 'sched': False}).json()[
+                    'action']
             act_t, act_n = wfl.actions[action]
             reward, wf_time = wfl.make_action(act_t, act_n)
             next_state = list(map(float, list(wfl.state)))
-            if config['actor_type'] == 'lstm':
+            if config['actor_type'] == 'rnn':
                 deq.push(next_state)
                 next_state = deq.show()
             done = wfl.completed
