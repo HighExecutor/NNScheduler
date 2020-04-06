@@ -39,6 +39,12 @@ parser.add_argument('--result-folder', type=str, default='')
 
 
 def main(args):
+    """
+    Enter point for Sequential Compare Function. Compare DQTS and our algorithm.
+
+    :param args:
+    :return:
+    """
     model = get_model(args)
     dqts_model = get_dqts_model(args)
     reward = [run_episode(model, ei, args) for ei in range(args.num_episodes)]

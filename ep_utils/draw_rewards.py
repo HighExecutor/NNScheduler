@@ -7,6 +7,14 @@ from datetime import datetime
 
 
 def plot_reward(args, rewards, heft_reward=None):
+    """
+    Plot history of reward on one plot for reward from algorithm based on NN and heft
+
+    :param args:
+    :param rewards:
+    :param heft_reward:
+    :return:
+    """
     cur_dir = os.getcwd()
     means = np.convolve(rewards, np.ones((500,)))[499:-499] / 500
     means = means.tolist()
@@ -49,6 +57,14 @@ def plot_reward(args, rewards, heft_reward=None):
 
 
 def plot_reward_together(args, reward0, reward1):
+    """
+    Plot two different reward history together
+
+    :param args:
+    :param reward0:
+    :param reward1:
+    :return:
+    """
     cur_dir = os.getcwd()
     means0 = np.convolve(reward0, np.ones((500,)))[499:-499] / 500
     means0 = means0.tolist()

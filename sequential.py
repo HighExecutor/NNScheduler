@@ -45,6 +45,12 @@ parser.add_argument('--result-folder', type=str, default='')
 
 
 def get_model(args):
+    """
+    get model using args parameters
+
+    :param args:
+    :return:
+    """
     action_size = args.agent_tasks * args.n_nodes
     if not args.model_name:
         model_name = 'model_fc.h5' if not args.actor_type=='fc' else 'model_rnn.h5'
@@ -64,6 +70,16 @@ def get_model(args):
 
 
 def episode(model, ei, config, test_wfs, test_size):
+    """
+    Run one episode of learning for algorithm based on NN
+
+    :param model:
+    :param ei:
+    :param config:
+    :param test_wfs:
+    :param test_size:
+    :return:
+    """
     ttree, tdata, trun_times = test_wfs[ei % test_size]
     wfl = ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
     wfl.name = config['wfs_name'][ei % test_size]
@@ -97,6 +113,14 @@ def episode(model, ei, config, test_wfs, test_size):
 
 
 def remember(model, sars_list, args):
+    """
+    remember tuple of data - state, action, reward, next_state
+
+    :param model:
+    :param sars_list:
+    :param args:
+    :return:
+    """
     for sarsa in sars_list:
         if args.actor_type == 'fc':
             state = sarsa[0].reshape(1, model.STATE)
@@ -111,10 +135,25 @@ def remember(model, sars_list, args):
 
 
 def replay(model, batch_size):
+    """
+    Replay function
+
+    :param model:
+    :param batch_size:
+    :return:
+    """
     model.replay(batch_size)
 
 
 def run_episode(model, ei, args):
+    """
+    Run episode of Learning, Remember and Replay
+
+    :param model:
+    :param ei:
+    :param args:
+    :return:
+    """
     config = parameter_setup(args, DEFAULT_CONFIG)
     test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
     reward, sars_list = episode(model, ei, config, test_wfs, test_size)
@@ -124,6 +163,13 @@ def run_episode(model, ei, args):
 
 
 def test(model, args):
+    """
+    Create Schedule using current NN without learning parameters
+
+    :param model:
+    :param args:
+    :return:
+    """
     config = parameter_setup(args, DEFAULT_CONFIG)
     test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
     for i in range(test_size):
@@ -155,6 +201,13 @@ def test(model, args):
 
 
 def interective_test(model, args):
+    """
+    Interective Test
+
+    :param model:
+    :param args:
+    :return:
+    """
     config = parameter_setup(args, DEFAULT_CONFIG)
     test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
     for i in range(test_size):
@@ -197,6 +250,12 @@ def interective_test(model, args):
 
 
 def main(args):
+    """
+    Enter point of Sequential learning program
+
+    :param args:
+    :return:
+    """
     model = get_model(args)
     reward = [run_episode(model, ei, args) for ei in range(args.num_episodes)]
     plot_reward(args, reward)

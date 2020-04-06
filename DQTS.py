@@ -63,6 +63,12 @@ def get_model(args):
 
 
 def main(args):
+    """
+    Enter point for DQTS algorithm run
+
+    :param args:
+    :return:
+    """
     model = get_model(args)
     reward = [run_episode(model, ei, args) for ei in range(args.num_episodes)]
     plot_reward(args, reward)
