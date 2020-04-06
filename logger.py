@@ -18,13 +18,13 @@ class Logger(object):
 def setup_logger(args):
     if args.logger:
         if args.alg == 'nns':
-            logger_nns = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now()}')
+            logger_nns = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now().strftime("%d%b%y_%I%M%p")}')
             logger_heft = None
         elif args.alg == 'heft':
             logger_nns = None
-            logger_heft = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now()}')
+            logger_heft = Logger(pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now().strftime("%d%b%y_%I%M%p")}')
         elif args.alg == 'compare':
-            base_dir = pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now()}'
+            base_dir = pathlib.Path(os.getcwd()) / 'train_logs' / f'RL-agent-{datetime.now().strftime("%d%b%y_%I%M%p")}'
             logger_nns = Logger(log_dir=base_dir / 'nns')
             logger_heft = Logger(log_dir=base_dir / 'heft')
     else:

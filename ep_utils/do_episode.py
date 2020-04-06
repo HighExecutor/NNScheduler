@@ -36,6 +36,7 @@ def episode(ei, config, test_wfs, test_size, URL):
         done = wfl.completed
         sars_list.append((state, action, reward, next_state, done))
         state = next_state
+        replay(config['batch_size'], URL)
         if done:
             return reward, sars_list
     return reward, sars_list
@@ -47,7 +48,6 @@ def run_episode(ei, logger, args):
     test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
     reward, sars_list = episode(ei, config, test_wfs, test_size, URL)
     remember(sars_list, URL)
-    replay(config['batch_size'], URL)
     if ei % 100 == 0:
         print("episode {} completed".format(ei))
     if logger is not None:
