@@ -1,12 +1,12 @@
 from actor import DQNActor
-from lstm_deq import LSTMDeque
+from rnn_deq import RNNDeque
 from argparse import ArgumentParser
 from ep_utils.setups import parameter_setup, DEFAULT_CONFIG
 import numpy as np
 import env.context as ctx
 from ep_utils.setups import wf_setup
 from draw_figures import write_schedule
-from interective import ScheduleInterectivePlotter
+from interactive import ScheduleInterectivePlotter
 from copy import deepcopy
 from ep_utils.draw_rewards import plot_reward
 from sequential import run_episode

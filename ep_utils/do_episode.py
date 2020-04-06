@@ -1,6 +1,6 @@
 import env.context as ctx
 import requests
-from lstm_deq import LSTMDeque
+from rnn_deq import RNNDeque
 import numpy as np
 from ep_utils.setups import parameter_setup, wf_setup, DEFAULT_CONFIG
 from ep_utils.remember import remember
@@ -8,14 +8,14 @@ from ep_utils.replay import replay
 
 
 def episode(ei, config, test_wfs, test_size, URL):
-    ttree, tdata, trun_times = test_wfs[ei % test_size]
-    wfl = ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
+    tree, data, run_times = test_wfs[ei % test_size]
+    wfl = ctx.Context(config['agent_task'], config['nodes'], run_times, tree, data)
     wfl.name = config['wfs_name'][ei % test_size]
-    if config['actor_type'] == 'lstm':
-        deq = LSTMDeque(seq_size=config['seq_size'], size=config['state_size'])
+    if config['actor_type'] == 'rnn':
+        deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
     done = wfl.completed
     state = list(map(float, list(wfl.state)))
-    if config['actor_type'] == 'lstm':
+    if config['actor_type'] == 'rnn':
         deq.push(state)
         state = deq.show()
     sars_list = list()
@@ -29,7 +29,7 @@ def episode(ei, config, test_wfs, test_size, URL):
         act_t, act_n = wfl.actions[action]
         reward, wf_time = wfl.make_action(act_t, act_n)
         next_state = list(map(float, list(wfl.state)))
-        if config['actor_type'] == 'lstm':
+        if config['actor_type'] == 'rnn':
             deq.push(next_state)
             next_state = deq.show()
             next_state = next_state.tolist()

@@ -14,7 +14,7 @@ from keras import initializers
 from keras.models import model_from_json
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.layers import LSTM, Embedding
+from keras.layers import LSTM, Embedding, SimpleRNN
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.optimizers import SGD, Adam
 
@@ -25,8 +25,8 @@ class DQNActor:
         self.SECOND_LAYER = second
         self.THIRD_LAYER = third
 
-        self.FIRST_LSTM_LAYER = first
-        self.SECOND_LSTM_LAYER = second
+        self.FIRST_RNN_LAYER = first
+        self.SECOND_RNN_LAYER = second
 
         self.STATE = state_size
         self.ACTIONS = action_size  # number of  actions
@@ -41,20 +41,20 @@ class DQNActor:
         # более рандомны, чем в начале, поэтому мы снижаем e от INITIAL до FINAL за EXPLORE шагов
         self.FINAL_EPSILON = 0.01  # final value of epsilon
         self.INITIAL_EPSILON = 0.4  # starting value of epsilon
-        self.REPLAY_MEMORY = 3000  # number of previous transitions to remember
+        self.REPLAY_MEMORY = 50000  # number of previous transitions to remember
         self.LEARNING_RATE = 1e-4
         self.D = deque(maxlen=self.REPLAY_MEMORY)
         self.actor_type = actor_type
         self.seq_size = seq_size
 
         self.model = self.buildmodel(self.FIRST_LAYER, self.SECOND_LAYER, self.THIRD_LAYER) if self.actor_type == 'fc' \
-            else self.build_lstm_model(self.FIRST_LSTM_LAYER, self.SECOND_LSTM_LAYER)
+            else self.build_rnn_model(self.FIRST_RNN_LAYER, self.SECOND_RNN_LAYER)
 
         self.epsilon = self.INITIAL_EPSILON
         self.replay_counter = 0
         self.can_replay = False
 
-        if self.actor_type == 'lstm':
+        if self.actor_type == 'rnn':
             assert self.seq_size is not None
 
     def buildmodel(self, first=1024, second=512, third=256):
@@ -67,13 +67,13 @@ class DQNActor:
         model.compile(loss='mse', optimizer=adam)
         return model
 
-    def build_lstm_model(self, first_lstm_layer=32, second_lstm_layer=None):
+    def build_rnn_model(self, first_rnn_layer=32, second_rnn_layer=None):
         model = Sequential()
-        if second_lstm_layer != 0:
-            model.add(LSTM(first_lstm_layer, input_dim=self.STATE, activation='tanh', return_sequences=True))
-            model.add(LSTM(second_lstm_layer, activation='tanh'))
+        if second_rnn_layer != 0:
+            model.add(SimpleRNN(first_rnn_layer, input_dim=self.STATE, activation='tanh', return_sequences=True))
+            model.add(SimpleRNN(second_rnn_layer, activation='tanh'))
         else:
-            model.add(LSTM(first_lstm_layer, input_dim=self.STATE, activation='tanh'))
+            model.add(SimpleRNN(first_rnn_layer, input_dim=self.STATE, activation='tanh'))
         model.add(Dense(self.ACTIONS, activation='relu'))
         adam = Adam(lr=self.LEARNING_RATE)
         model.compile(loss='mse', optimizer=adam)
@@ -140,7 +140,7 @@ class DQNActor:
             if self.actor_type == 'fc':
                 inputs = np.zeros((len(minibatch), self.STATE))
                 targets = np.zeros((inputs.shape[0], self.ACTIONS))
-            elif self.actor_type == 'lstm':
+            elif self.actor_type == 'rnn':
                 inputs = np.zeros((len(minibatch), self.seq_size, self.STATE))
                 targets = np.zeros((inputs.shape[0], self.ACTIONS))
             # преобразуем каждую строку из памяти, чтобы использовать sarsa
@@ -191,10 +191,10 @@ class DQNActor:
                       'third-fc-layer': self.THIRD_LAYER,
                       'name': name + "_fc.h5"}
 
-        elif self.actor_type == 'lstm':
-            config = {'first-lstm-layer': self.FIRST_LSTM_LAYER,
-                      'second-lstm-layer': self.SECOND_LSTM_LAYER,
-                      'name': name + "_lstm.h5"}
+        elif self.actor_type == 'rnn':
+            config = {'first-rnn-layer': self.FIRST_RNN_LAYER,
+                      'second-rnn-layer': self.SECOND_RNN_LAYER,
+                      'name': name + "_rnn.h5"}
 
         with open('config.json', 'w') as fp:
             json.dump(config, fp)
@@ -216,9 +216,9 @@ class DQNActor:
             self.model = self.buildmodel(first=config['first-fc-layer'],
                                          second=config['second-fc-layer'],
                                          third=config['third-fc-layer'])
-        elif self.actor_type == 'lstm':
-            self.model = self.buildmodel(first=config['first-lstm-layer'],
-                                         second=config['second-lstm-layer'])
+        elif self.actor_type == 'rnn':
+            self.model = self.buildmodel(first=config['first-rnn-layer'],
+                                         second=config['second-rnn-layer'])
 
         self.model.load_weights(model_path)
         adam = Adam(lr=self.LEARNING_RATE)

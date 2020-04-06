@@ -10,3 +10,4 @@ __pycache__
 .ipynb_checkpoints
 /train_logs/
 /results/
+.pytest_cache

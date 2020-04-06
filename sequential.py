@@ -1,12 +1,12 @@
 from actor import DQNActor
-from lstm_deq import LSTMDeque
+from rnn_deq import RNNDeque
 from argparse import ArgumentParser
 from ep_utils.setups import parameter_setup, DEFAULT_CONFIG
 import numpy as np
 import env.context as ctx
 from ep_utils.setups import wf_setup
 from draw_figures import write_schedule
-from interective import ScheduleInterectivePlotter
+from interactive import ScheduleInterectivePlotter
 from copy import deepcopy
 from ep_utils.draw_rewards import plot_reward
 
@@ -47,7 +47,7 @@ parser.add_argument('--result-folder', type=str, default='')
 def get_model(args):
     action_size = args.agent_tasks * args.n_nodes
     if not args.model_name:
-        model_name = 'model_fc.h5' if not args.actor_type=='fc' else 'model_lstm.h5'
+        model_name = 'model_fc.h5' if not args.actor_type=='fc' else 'model_rnn.h5'
     if not args.load:
         return DQNActor(first=args.first_layer, second=args.second_layer, third=args.third_layer,
                         state_size=args.state_size, action_size=action_size,
@@ -67,11 +67,11 @@ def episode(model, ei, config, test_wfs, test_size):
     ttree, tdata, trun_times = test_wfs[ei % test_size]
     wfl = ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
     wfl.name = config['wfs_name'][ei % test_size]
-    if config['actor_type'] == 'lstm':
-        deq = LSTMDeque(seq_size=config['seq_size'], size=config['state_size'])
+    if config['actor_type'] == 'rnn':
+        deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
     done = wfl.completed
     state = wfl.state
-    if config['actor_type'] == 'lstm':
+    if config['actor_type'] == 'rnn':
         deq.push(state)
         state = deq.show()
     sars_list = list()
@@ -85,7 +85,7 @@ def episode(model, ei, config, test_wfs, test_size):
         act_t, act_n = wfl.actions[action]
         reward, wf_time = wfl.make_action(act_t, act_n)
         next_state = wfl.state
-        if config['actor_type'] == 'lstm':
+        if config['actor_type'] == 'rnn':
             deq.push(next_state)
             next_state = deq.show()
         done = wfl.completed
@@ -101,7 +101,7 @@ def remember(model, sars_list, args):
         if args.actor_type == 'fc':
             state = sarsa[0].reshape(1, model.STATE)
             next_state = sarsa[3].reshape(1, model.STATE)
-        elif args.actor_type == 'lstm':
+        elif args.actor_type == 'rnn':
             state = sarsa[0].reshape((1, model.seq_size, model.STATE))
             next_state = sarsa[3].reshape((1, model.seq_size, model.STATE))
         action = int(sarsa[1])
@@ -130,11 +130,11 @@ def test(model, args):
         ttree, tdata, trun_times = test_wfs[i]
         wfl = ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
         wfl.name = config['wfs_name'][i]
-        if config['actor_type'] == 'lstm':
-            deq = LSTMDeque(seq_size=config['seq_size'], size=config['state_size'])
+        if config['actor_type'] == 'rnn':
+            deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
         done = wfl.completed
         state = wfl.state
-        if config['actor_type'] == 'lstm':
+        if config['actor_type'] == 'rnn':
             deq.push(state)
             state = deq.show()
         for time in range(wfl.n):
@@ -143,7 +143,7 @@ def test(model, args):
             act_t, act_n = wfl.actions[action]
             reward, wf_time = wfl.make_action(act_t, act_n)
             next_state = wfl.state
-            if config['actor_type'] == 'lstm':
+            if config['actor_type'] == 'rnn':
                 deq.push(next_state)
                 next_state = deq.show()
             done = wfl.completed
@@ -162,8 +162,8 @@ def interective_test(model, args):
         wfl = ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
         sch = ScheduleInterectivePlotter(wfl.worst_time, wfl.m, wfl.n)
         wfl.name = config['wfs_name'][i]
-        if config['actor_type'] == 'lstm':
-            deq = LSTMDeque(seq_size=config['seq_size'], size=config['state_size'])
+        if config['actor_type'] == 'rnn':
+            deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
         done = wfl.completed
         state = wfl.state
         for time in range(wfl.n):
@@ -185,7 +185,7 @@ def interective_test(model, args):
                     reward, wf_time, item = wfl_copy.make_action_item(t, n)
                     acts.append((item, reward, n))
             sch.draw_item(wfl.schedule, acts)
-            if config['actor_type'] == 'lstm':
+            if config['actor_type'] == 'rnn':
                 deq.push(next_state)
                 next_state = deq.show()
             done = wfl.completed

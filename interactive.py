@@ -9,7 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from ep_utils.setups import parameter_setup, DEFAULT_CONFIG, wf_setup
 import env.context as ctx
-from lstm_deq import LSTMDeque
+from rnn_deq import RNNDeque
 import requests
 
 import numpy as np
