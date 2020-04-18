@@ -86,3 +86,47 @@ def plot_reward_together(args, reward0, reward1):
     plt_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_plt.png'
     plt.savefig(plt_path)
 
+
+def plot_heft_dqts_ours(args, reward_heft, reward_dqts, reward_ours):
+    cur_dir = os.getcwd()
+    means0 = np.convolve(reward_dqts, np.ones((500,)))[499:-499] / 500
+    means0 = means0.tolist()
+
+    means1 = np.convolve(reward_ours, np.ones((500,)))[499:-499] / 500
+    means1 = means1.tolist()
+
+    reward_heft = [reward_heft for _ in range(args.num_episodes)]
+
+    plt.style.use("seaborn-muted")
+    plt.figure(figsize=(10, 5))
+    plt.plot(reward_ours, '--', label="rewards our")
+    plt.plot(means0, '-', label="avg our")
+
+    plt.plot(reward_dqts, '-.', label="rewards dqts")
+    plt.plot(means1, '-o', label="avg dqts")
+
+    plt.plot(reward_heft, label='heft-rewards')
+
+    plt.ylabel('reward')
+    plt.xlabel('episodes')
+    plt.legend()
+    plt_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_plt.png'
+    plt.savefig(plt_path)
+
+    reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_rewards_heft.csv'
+    rewards = np.array(reward_heft)
+    result = pd.DataFrame()
+    result['reward'] = rewards
+    result.to_csv(reward_path, sep=',', index=None, columns=['reward'])
+
+    reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_rewards_dqts.csv'
+    rewards = np.array(reward_dqts)
+    result = pd.DataFrame()
+    result['reward'] = rewards
+    result.to_csv(reward_path, sep=',', index=None, columns=['reward'])
+
+    reward_path = pathlib.Path(cur_dir) / 'results' / f'{args.run_name}_{datetime.now().strftime("%d%b%y_%I%M%p")}_rewards_ours.csv'
+    rewards = np.array(reward_ours)
+    result = pd.DataFrame()
+    result['reward'] = rewards
+    result.to_csv(reward_path, sep=',', index=None, columns=['reward'])

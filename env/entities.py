@@ -1,11 +1,13 @@
 import numpy as np
 
+
 def volume_to_transfer(task1, task2):
     input = task1.input_files
     output = task2.output_files
     req_files = input.keys() & output.keys()
     volume = sum([input[f].size for f in list(req_files)])
     return volume / 1024 / 1024 # from B to MB
+
 
 # составление матрицы оценочного времени выполнения задач на нодах в зависимости от количества ядер
 def estimate_comp_times(run_times, nodes):
@@ -15,6 +17,7 @@ def estimate_comp_times(run_times, nodes):
     for i in range(m):
         comp_times[i] = run_times / np.sqrt(nodes[i] / 8)
     return comp_times.T
+
 
 class Node:
     def __init__(self, id, cores):

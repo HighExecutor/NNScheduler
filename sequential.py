@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 from ep_utils.setups import parameter_setup, DEFAULT_CONFIG
 import numpy as np
 import env.context as ctx
+import env.dqts_context as dqts_ctx
 from ep_utils.setups import wf_setup
 from draw_figures import write_schedule
 from interactive import ScheduleInterectivePlotter
@@ -13,7 +14,7 @@ from ep_utils.draw_rewards import plot_reward
 parser = ArgumentParser()
 
 
-parser.add_argument('--state-size', type=int, default=64)
+parser.add_argument('--state-size', type=int, default=20)
 parser.add_argument('--agent-tasks', type=int, default=5)
 
 parser.add_argument('--actor-type', type=str, default='fc')
@@ -36,7 +37,7 @@ parser.add_argument('--batch-size', type=int, default=None)
 
 parser.add_argument('--wfs-name', type=str, default=None)
 parser.add_argument('--is-test', type=bool, default=False)
-parser.add_argument('--num-episodes', type=int, default=1)
+parser.add_argument('--num-episodes', type=int, default=10000)
 parser.add_argument('--logger', type=bool, default=True)
 parser.add_argument('--run-name', type=str, default='NoName')
 parser.add_argument('--save', type=bool, default=False)
@@ -112,6 +113,49 @@ def episode(model, ei, config, test_wfs, test_size):
     return reward, sars_list
 
 
+def episode_dqts(model, ei, config, test_wfs, test_size):
+    """
+    Run one episode of learning for algorithm based on NN
+
+    :param model:
+    :param ei:
+    :param config:
+    :param test_wfs:
+    :param test_size:
+    :return:
+    """
+    ttree, tdata, trun_times = test_wfs[ei % test_size]
+    wfl = dqts_ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
+    wfl.name = config['wfs_name'][ei % test_size]
+    if config['actor_type'] == 'rnn':
+        deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
+    done = wfl.completed
+    state = wfl.state
+    if config['actor_type'] == 'rnn':
+        deq.push(state)
+        state = deq.show()
+    sars_list = list()
+    reward = 0
+    for act_time in range(100):
+        if act_time > 100:
+            raise Exception("attempt to provide action after wf is scheduled")
+        mask = wfl.get_mask()
+        # action = requests.post(f"{URL}act", json={'state': state, 'mask': mask, 'sched': False}).json()['action']
+        action = model.act(state.reshape(1, state.shape[0]), mask, False)
+        act_t, act_n = wfl.actions[action]
+        reward, wf_time = wfl.make_action(act_t, act_n)
+        next_state = wfl.state
+        if config['actor_type'] == 'rnn':
+            deq.push(next_state)
+            next_state = deq.show()
+        done = wfl.completed
+        sars_list.append((state, action, reward, next_state, done))
+        state = next_state
+        if done:
+            return reward, sars_list
+    return reward, sars_list
+
+
 def remember(model, sars_list, args):
     """
     remember tuple of data - state, action, reward, next_state
@@ -145,7 +189,7 @@ def replay(model, batch_size):
     model.replay(batch_size)
 
 
-def run_episode(model, ei, args):
+def run_episode(model, ei, args, logger=None):
     """
     Run episode of Learning, Remember and Replay
 
@@ -159,6 +203,27 @@ def run_episode(model, ei, args):
     reward, sars_list = episode(model, ei, config, test_wfs, test_size)
     remember(model, sars_list, args)
     replay(model, config['batch_size'])
+    if logger is not None:
+        logger.log_scalar('main/reward', reward, ei)
+    return reward
+
+
+def run_dqts_episode(model, ei, args, logger=None):
+    """
+    Run episode of Learning, Remember and Replay
+
+    :param model:
+    :param ei:
+    :param args:
+    :return:
+    """
+    config = parameter_setup(args, DEFAULT_CONFIG)
+    test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
+    reward, sars_list = episode_dqts(model, ei, config, test_wfs, test_size)
+    remember(model, sars_list, args)
+    replay(model, config['batch_size'])
+    if logger is not None:
+        logger.log_scalar('main/reward', reward, ei)
     return reward
 
 
@@ -175,6 +240,44 @@ def test(model, args):
     for i in range(test_size):
         ttree, tdata, trun_times = test_wfs[i]
         wfl = ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
+        wfl.name = config['wfs_name'][i]
+        if config['actor_type'] == 'rnn':
+            deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
+        done = wfl.completed
+        state = wfl.state
+        if config['actor_type'] == 'rnn':
+            deq.push(state)
+            state = deq.show()
+        for time in range(wfl.n):
+            mask = wfl.get_mask()
+            action = model.act(state.reshape(1, state.shape[0]), mask, False)
+            act_t, act_n = wfl.actions[action]
+            reward, wf_time = wfl.make_action(act_t, act_n)
+            next_state = wfl.state
+            if config['actor_type'] == 'rnn':
+                deq.push(next_state)
+                next_state = deq.show()
+            done = wfl.completed
+            state = next_state
+            if done:
+                test_scores[i].append(reward)
+                test_times[i].append(wf_time)
+        write_schedule(args.run_name, i, wfl)
+
+
+def dqts_test(model, args):
+    """
+    Create Schedule using current NN without learning parameters
+
+    :param model:
+    :param args:
+    :return:
+    """
+    config = parameter_setup(args, DEFAULT_CONFIG)
+    test_wfs, test_times, test_scores, test_size = wf_setup(config['wfs_name'])
+    for i in range(test_size):
+        ttree, tdata, trun_times = test_wfs[i]
+        wfl = dqts_ctx.Context(config['agent_task'], config['nodes'], trun_times, ttree, tdata)
         wfl.name = config['wfs_name'][i]
         if config['actor_type'] == 'rnn':
             deq = RNNDeque(seq_size=config['seq_size'], size=config['state_size'])
