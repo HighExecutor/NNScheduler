@@ -36,9 +36,11 @@ def episode(ei, config, test_wfs, test_size, URL):
         done = wfl.completed
         sars_list.append((state, action, reward, next_state, done))
         state = next_state
-        replay(config['batch_size'], URL)
+
         if done:
+            replay(config['batch_size'], URL)
             return reward, sars_list
+
     return reward, sars_list
 
 
