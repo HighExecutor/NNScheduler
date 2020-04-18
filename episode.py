@@ -2,7 +2,7 @@ import numpy as np
 from argparse import ArgumentParser
 from logger import setup_logger
 from ep_utils.draw_rewards import plot_reward
-from ep_utils.do_episode import run_episode
+from ep_utils.do_episode import run_episode, run_dqts_episode
 from ep_utils.test import test
 from ep_utils.save import save
 from ep_utils.heft import do_heft
@@ -24,6 +24,7 @@ parser.add_argument('--wfs-name', type=str, default=None)
 parser.add_argument('--is-test', type=bool, default=False)
 parser.add_argument('--num-episodes', type=int, default=1)
 parser.add_argument('--actor-type', type=str, default='fc')
+parser.add_argument('--model-type', type=str, default='ours')
 parser.add_argument('--logger', type=bool, default=True)
 parser.add_argument('--run-name', type=str, default='NoName')
 parser.add_argument('--save', type=bool, default=False)
@@ -44,21 +45,30 @@ def main(args):
     """
     URL = f"http://{args.host}:{args.port}/"
     logger_nns, logger_heft = setup_logger(args)
-    if args.alg == 'nns':
-        if not args.is_test:
+    if args.model_type == 'ours':
+        if args.alg == 'nns':
+            if not args.is_test:
+                rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
+                plot_reward(args, rewards)
+            else:
+                test(args, URL)
+            if args.save:
+                save(URL)
+        elif args.alg == 'heft':
+            do_heft(args, URL, logger_heft)
+        elif args.alg == 'compare':
+            response = do_heft(args, URL, logger_heft)
             rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
+            plot_reward(args, rewards, heft_reward=response['reward'])
+            test(args, URL)
+    elif args.model_type == 'dqts':
+        if not args.is_test:
+            rewards = [run_dqts_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
             plot_reward(args, rewards)
         else:
             test(args, URL)
         if args.save:
             save(URL)
-    elif args.alg == 'heft':
-        do_heft(args, URL, logger_heft)
-    elif args.alg == 'compare':
-        response = do_heft(args, URL, logger_heft)
-        rewards = [run_episode(ei, logger_nns, args) for ei in range(args.num_episodes)]
-        plot_reward(args, rewards, heft_reward=response['reward'])
-        test(args, URL)
 
 
 if __name__ == '__main__':

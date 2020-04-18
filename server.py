@@ -25,6 +25,7 @@ parser.add_argument('--alg', type=str, default='nns')
 parser.add_argument('--state-size', type=int, default=64)
 parser.add_argument('--agent-tasks', type=int, default=5)
 parser.add_argument('--actor-type', type=str, default='fc')
+parser.add_argument('--model-type', type=str, default='ours')
 parser.add_argument('--first-layer', type=int, default=1024)
 parser.add_argument('--second-layer', type=int, default=512)
 parser.add_argument('--third-layer', type=int, default=256)
@@ -83,6 +84,19 @@ def get_model():
         else:
             model.load(model_name)
         return model
+
+@app.route('/')
+def get_dqts_model():
+    """
+    Server function which create NN model on Server
+
+    :return:
+    """
+
+    state_size = 20
+    action_size = app.config.get('action_size')
+
+    return DQNActor(first=20, second=20, third=20, state_size=state_size, action_size=action_size, seq_size=1, actor_type='fc')
 
 
 @app.route('/act', methods=['POST'])
@@ -213,7 +227,10 @@ def heft():
 
 if __name__ == '__main__':
     graph = tf.get_default_graph()
-    model = get_model()
+    if args.model_type == 'ours':
+        model = get_model()
+    elif args.model_type == 'dqts':
+        model = get_dqts_model()
     URL = f'http://{args.host}:{args.port}/'
     app.run(host=args.host, port=args.port, debug=False)
 
